@@ -24,16 +24,29 @@
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-dark); background-image: radial-gradient(circle at top right, rgba(108, 92, 231, 0.15), transparent 40%), radial-gradient(circle at bottom left, rgba(0, 210, 211, 0.1), transparent 40%); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes slideInLeft { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes pulseRed { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
 
-        /* --- LOGIN SCREEN --- */
-        #login-screen { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: linear-gradient(-45deg, #0f111a, #1a1c2c, #2d2447, #1e2749); background-size: 400% 400%; animation: gradientBG 15s ease infinite; z-index: 50; position: absolute; top: 0; left: 0;}
-        .login-box { background: rgba(20, 22, 35, 0.7); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; width: 340px; animation: fadeIn 0.6s ease forwards; }
-        .app-brand-title { font-size: 2.2em; font-weight: 800; margin-bottom: 5px; background: linear-gradient(to right, #a29bfe, #00d2d3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .login-box input { width: 90%; margin-bottom: 25px; background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; outline: none; font-size: 16px; box-sizing: border-box; }
-        .login-box .enter-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; font-weight: bold; cursor: pointer; transition: var(--transition); font-size: 18px; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4); }
+        /* --- ADVANCED MULTI-STATE LOGIN SCREEN --- */
+        #login-screen { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: var(--bg-dark); z-index: 50; position: absolute; top: 0; left: 0;}
+        .auth-container { background: rgba(20, 22, 35, 0.7); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; box-shadow: var(--shadow); width: 340px; animation: fadeIn 0.6s ease forwards; text-align: center;}
+        .auth-brand-title { font-size: 2.2em; font-weight: 800; margin-bottom: 5px; background: linear-gradient(to right, #a29bfe, #00d2d3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .auth-brand-subtitle { font-size: 0.95em; color: var(--text-muted); margin-bottom: 30px; }
+
+        .auth-form { display: none; flex-direction: column; gap: 15px;}
+        .auth-form.active { display: flex; animation: fadeIn 0.3s ease forwards;}
+
+        .auth-input { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); color: white; border: 1px solid var(--glass-border); border-radius: 10px; outline: none; font-size: 15px; box-sizing: border-box; transition: var(--transition);}
+        .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(108, 92, 231, 0.2); }
+
+        .auth-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; font-weight: bold; cursor: pointer; transition: var(--transition); font-size: 16px; margin-top: 10px;}
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4); }
+
+        .auth-link { color: var(--accent); font-size: 0.85em; cursor: pointer; text-decoration: none; margin-top: 5px; transition: var(--transition);}
+        .auth-link:hover { color: white; text-decoration: underline; }
+
+        .auth-error { color: var(--live-red); font-size: 0.85em; display: none; font-weight: bold; margin-bottom: -5px;}
+        .auth-success { color: #00b894; font-size: 0.85em; display: none; font-weight: bold; margin-bottom: -5px;}
 
         /* --- TOP NAVBAR --- */
         .top-navbar { height: 70px; flex-shrink: 0; background: rgba(20, 22, 35, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); display: none; align-items: center; justify-content: space-between; padding: 0 30px; z-index: 20; }
@@ -101,12 +114,7 @@
         .video-container { width: 100%; padding-top: 56.25%; position: relative; background: #111; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        /* --- NEW: VIEWER OVERLAY TO PREVENT PAUSING --- */
-        .viewer-overlay {
-            position: absolute; top: 0; left: 0; width: 100%;
-            height: calc(100% - 60px); /* Leaves bottom 60px free so they can click 'Unmute' and 'Fullscreen' */
-            z-index: 10; cursor: not-allowed; display: none;
-        }
+        .viewer-overlay { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 60px); z-index: 10; cursor: not-allowed; display: none; }
 
         .live-event-info { padding: 25px; background: var(--bg-panel); flex-grow: 1; border-top: 1px solid var(--glass-border);}
         .live-event-info h2 { margin: 0 0 10px 0; font-size: 1.6em; display: flex; align-items: center; gap: 10px;}
@@ -186,7 +194,7 @@
         .rp-online-count { display: flex; align-items: center; gap: 8px; font-size: 0.95em; font-weight: bold; background: var(--glass-bg); padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border);}
 
         /* Modals & Menus */
-        .context-menu { display: none; position: absolute; z-index: 100000; background: rgba(30, 33, 50, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; min-width: 200px; flex-direction: column; }
+        .context-menu { display: none; position: fixed; z-index: 100000; background: rgba(30, 33, 50, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; min-width: 200px; flex-direction: column; }
         .context-menu button { display: block; width: 100%; padding: 12px 15px; text-align: left; background: none; border: none; cursor: pointer; color: var(--text-main); font-weight: bold; }
         .context-menu button:hover { background: rgba(255,255,255,0.05); }
         .lightbox-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
@@ -296,10 +304,45 @@
 </div>
 
 <div id="login-screen">
-    <div class="login-box">
-        <div class="app-brand-title">✨ Event Connect</div>
-        <input type="text" id="usernameInput" placeholder="Enter your username..." onkeypress="if(event.key === 'Enter') startApp()">
-        <button class="enter-btn" onclick="startApp()">Enter Dashboard</button>
+    <div class="auth-container">
+        <div class="auth-brand-title">✨ Event Connect</div>
+        <div class="auth-brand-subtitle">Host streams and chat instantly</div>
+
+        <div id="auth-msg-success" class="auth-success"></div>
+        <div id="auth-msg-error" class="auth-error"></div>
+
+        <div id="form-login" class="auth-form active">
+            <input type="email" id="loginEmail" class="auth-input" placeholder="Email Address">
+            <input type="password" id="loginPassword" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') attemptLogin()">
+            <button class="auth-btn" onclick="attemptLogin()">Log In</button>
+            <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                <a class="auth-link" onclick="switchAuthView('form-register')">Create an account</a>
+                <a class="auth-link" onclick="switchAuthView('form-forgot')">Forgot password?</a>
+            </div>
+        </div>
+
+        <div id="form-register" class="auth-form">
+            <input type="text" id="regUsername" class="auth-input" placeholder="Choose a Username">
+            <input type="email" id="regEmail" class="auth-input" placeholder="Email Address">
+            <input type="password" id="regPassword" class="auth-input" placeholder="Create Password">
+            <button class="auth-btn" onclick="attemptRegister()">Create Account</button>
+            <a class="auth-link" onclick="switchAuthView('form-login')">Already have an account? Log In</a>
+        </div>
+
+        <div id="form-forgot" class="auth-form">
+            <p style="color:var(--text-muted); font-size:0.9em; margin-bottom:5px;">Enter your email to receive a recovery OTP.</p>
+            <input type="email" id="forgotEmail" class="auth-input" placeholder="Email Address">
+            <button class="auth-btn" onclick="attemptForgotPassword()">Send OTP</button>
+            <a class="auth-link" onclick="switchAuthView('form-login')">Back to Login</a>
+        </div>
+
+        <div id="form-reset" class="auth-form">
+            <p style="color:var(--text-muted); font-size:0.9em; margin-bottom:5px;">Enter the 6-digit OTP sent to your email.</p>
+            <input type="text" id="resetOtp" class="auth-input" placeholder="6-Digit OTP Code" style="text-align:center; letter-spacing: 5px; font-weight:bold;">
+            <input type="password" id="resetNewPassword" class="auth-input" placeholder="New Password">
+            <button class="auth-btn" onclick="attemptResetPassword()">Secure New Password</button>
+            <a class="auth-link" onclick="switchAuthView('form-login')">Cancel</a>
+        </div>
     </div>
 </div>
 
@@ -362,7 +405,7 @@
             <div class="live-event-info">
                 <h2><span class="live-badge">LIVE</span> <span id="liveEventTitle">Event Title</span></h2>
                 <div class="live-stats"><span class="live-indicator"></span> <span id="liveWatchingCount">0</span> users watching right now</div>
-                <div style="margin-bottom: 10px;"><a href="#" target="_blank" id="externalLinkBtn" class="btn-outline">Pop-out Stream / Open Source Link ↗️</a></div>
+                <div style="margin-bottom: 20px;"><a href="#" target="_blank" id="externalLinkBtn" class="btn-outline">Pop-out Stream / Open Source Link ↗️</a></div>
 
                 <div id="hostControls" style="display: none; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border); padding-top: 15px; margin-top: 15px;">
                     <span style="color: #ff4757; font-weight: bold; font-size: 0.9em;">👑 Host Dashboard</span>
@@ -372,14 +415,7 @@
                     </div>
                 </div>
 
-                <div class="live-actions-row">
-                    <div class="live-reactions">
-                        <button class="reaction-btn" onclick="sendReaction('🔥')">🔥</button>
-                        <button class="reaction-btn" onclick="sendReaction('❤️')">❤️</button>
-                        <button class="reaction-btn" onclick="sendReaction('😮')">😮</button>
-                        <button class="reaction-btn" onclick="sendReaction('👏')">👏</button>
-                    </div>
-                </div>
+                <div class="live-actions-row"><div class="live-reactions"><button class="reaction-btn" onclick="sendReaction('🔥')">🔥</button><button class="reaction-btn" onclick="sendReaction('❤️')">❤️</button><button class="reaction-btn" onclick="sendReaction('😮')">😮</button><button class="reaction-btn" onclick="sendReaction('👏')">👏</button></div></div>
             </div>
         </div>
 
@@ -453,6 +489,123 @@
     let currentReplyMsg = "";
     let cachedRoomsArray = [];
 
+    // --- AUTHENTICATION LOGIC ---
+    function switchAuthView(formId) {
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        document.getElementById(formId).classList.add('active');
+        clearAuthMsgs();
+    }
+
+    function showAuthMsg(msg, isError) {
+        let el = document.getElementById(isError ? 'auth-msg-error' : 'auth-msg-success');
+        el.innerText = msg;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 4000);
+    }
+
+    function clearAuthMsgs() {
+        document.getElementById('auth-msg-error').style.display = 'none';
+        document.getElementById('auth-msg-success').style.display = 'none';
+    }
+
+    async function attemptRegister() {
+        let username = document.getElementById("regUsername").value.trim();
+        let email = document.getElementById("regEmail").value.trim();
+        let password = document.getElementById("regPassword").value;
+
+        if(!username || !email || !password) { showAuthMsg("All fields required.", true); return; }
+
+        let res = await fetch('/api/auth/register', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+        let result = await res.text();
+
+        if(result === "SUCCESS") {
+            showAuthMsg("Account created! Please log in.", false);
+            switchAuthView('form-login');
+        } else if(result === "USERNAME_TAKEN") { showAuthMsg("Username already exists.", true);
+        } else if(result === "EMAIL_TAKEN") { showAuthMsg("Email already registered.", true);
+        } else { showAuthMsg("Registration failed.", true); }
+    }
+
+    async function attemptLogin() {
+        let email = document.getElementById("loginEmail").value.trim();
+        let password = document.getElementById("loginPassword").value;
+
+        if(!email || !password) { showAuthMsg("Email and password required.", true); return; }
+
+        let res = await fetch('/api/auth/login', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        let result = await res.text();
+
+        if(result !== "FAIL") {
+            currentUser = result; // API returns the username on success
+            initAppUI();
+        } else {
+            showAuthMsg("Invalid email or password.", true);
+        }
+    }
+
+    // Stores email locally during reset flow
+    let recoveryEmail = "";
+
+    async function attemptForgotPassword() {
+        recoveryEmail = document.getElementById("forgotEmail").value.trim();
+        if(!recoveryEmail) { showAuthMsg("Please enter your email.", true); return; }
+
+        let res = await fetch('/api/auth/forgot-password', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: recoveryEmail })
+        });
+        let result = await res.text();
+
+        if(result === "OTP_SENT") {
+            showAuthMsg("OTP sent to your email!", false);
+            switchAuthView('form-reset');
+        } else {
+            showAuthMsg("Email not found in system.", true);
+        }
+    }
+
+    async function attemptResetPassword() {
+        let otp = document.getElementById("resetOtp").value.trim();
+        let newPassword = document.getElementById("resetNewPassword").value;
+
+        if(!otp || !newPassword) { showAuthMsg("OTP and new password required.", true); return; }
+
+        let res = await fetch('/api/auth/reset-password', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: recoveryEmail, otp, newPassword })
+        });
+        let result = await res.text();
+
+        if(result === "SUCCESS") {
+            showAuthMsg("Password secured! Please log in.", false);
+            switchAuthView('form-login');
+        } else if (result === "OTP_EXPIRED") { showAuthMsg("OTP expired. Try again.", true);
+        } else if (result === "INVALID_OTP") { showAuthMsg("Invalid OTP code.", true);
+        } else { showAuthMsg("Reset failed.", true); }
+    }
+
+    // Main UI Initiator (called after successful login)
+    function initAppUI() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("topNavbar").style.display = "flex";
+        document.getElementById("app-container").style.display = "flex";
+
+        document.getElementById("navUsername").innerText = currentUser;
+        document.getElementById("navAvatarInitials").innerText = currentUser.charAt(0).toUpperCase();
+
+        selectCategory('Tech & Dev', '💻', null);
+        document.querySelector('.category-item').classList.add('active-category');
+
+        loadRooms();
+    }
+
+
     function sendMessage() {
         let input = document.getElementById("messageText");
         let tagSelector = document.getElementById("tagSelect");
@@ -478,7 +631,6 @@
         }
     }
 
-    // --- HOST DASHBOARD FUNCTIONS ---
     function syncStream() {
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ content: "STREAM_SYNC_COMMAND", tag: "SYS_CMD", replyToUser: "", replyToMessage: "" }));
@@ -676,7 +828,6 @@
         document.getElementById("ytSearchResults").innerHTML = `<span style="color:var(--accent); font-weight:bold;">✅ Live Source Linked successfully!</span>`;
     }
 
-    // --- HOST & VIEWER LOGIC ENABLED ---
     function openLiveStream(roomId, title, embedUrl, memberCount, creator) {
         if (ws) { ws.close(); ws = null; }
         document.querySelectorAll('.category-item, .room-item').forEach(el => el.classList.remove('active-category', 'active-room'));
@@ -687,7 +838,6 @@
         document.getElementById("videoWrapper").style.display = "flex";
         document.getElementById("liveIframe").src = embedUrl;
 
-        // Host verification
         let isHost = (currentUser === creator);
         document.getElementById("hostControls").style.display = isHost ? "flex" : "none";
         document.getElementById("viewerOverlay").style.display = isHost ? "none" : "block";
@@ -777,23 +927,6 @@
             let roomName = roomItems[i].querySelector('.room-name-header').innerText.toLowerCase();
             roomItems[i].style.display = roomName.includes(filter) ? "flex" : "none";
         }
-    }
-
-    async function startApp() {
-        let input = document.getElementById("usernameInput").value.trim();
-        if (!input) return; currentUser = input;
-
-        await fetch('/api/users/login/' + currentUser, { method: 'POST' });
-
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("topNavbar").style.display = "flex";
-        document.getElementById("app-container").style.display = "flex";
-        document.getElementById("navUsername").innerText = currentUser;
-        document.getElementById("navAvatarInitials").innerText = currentUser.charAt(0).toUpperCase();
-
-        selectCategory('Tech & Dev', '💻', null);
-        document.querySelector('.category-item').classList.add('active-category');
-        loadRooms();
     }
 
     async function loadRooms() {
@@ -939,11 +1072,9 @@
         fileInput.value = "";
     }
 
-    // --- HOST SYS_CMD CATCHER ---
     function handleIncomingMessage(event) {
         let data = JSON.parse(event.data);
 
-        // CATCH HOST SYS COMMANDS
         if (data.tag === "SYS_CMD") {
             let messages = document.getElementById('messages');
             if (data.content === "STREAM_END_COMMAND") {
@@ -1013,7 +1144,7 @@
         ws.onmessage = handleIncomingMessage;
     }
 
-    function connectToChat(roomId, roomName, isPrivate, initialMemberCount) {
+    function connectToChat(roomId, roomName, isPrivate, initialMemberCount, creator) {
         if (ws) { ws.close(); ws = null;}
         currentRoomId = roomId; resetToStandardLayout();
 
@@ -1030,6 +1161,18 @@
         document.querySelectorAll('.room-item').forEach(el => el.classList.remove('active-room'));
         if(document.getElementById("room-item-" + roomId)) { document.getElementById("room-item-" + roomId).classList.add('active-room'); }
         connectWebSocket(roomId);
+    }
+
+    function startReply(user, msg) {
+        currentReplyUser = user; currentReplyMsg = msg.length > 50 ? msg.substring(0, 50) + "..." : msg;
+        document.getElementById("replyBannerMsg").innerText = currentReplyMsg;
+        document.getElementById("replyBanner").style.display = "block";
+        document.getElementById("messageText").focus();
+    }
+
+    function cancelReply() {
+        currentReplyUser = ""; currentReplyMsg = "";
+        document.getElementById("replyBanner").style.display = "none";
     }
 </script>
 </body>
